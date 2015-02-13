@@ -20,6 +20,13 @@ var ReactLive = React.createClass({
   componentDidMount: function() {
     this.state.editor = ace.edit('editor')
     this.state.editor.setTheme('ace/theme/pastel_on_dark')
+    this.state.editor.commands.addCommand({
+      name: 'run',
+      bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+      exec: function(editor) {
+        this.compile()
+      }
+    })
 
     var session = this.state.editor.getSession()
     session.setTabSize(2)
