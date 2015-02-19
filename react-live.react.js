@@ -1,12 +1,32 @@
-var ReactLive = React.createClass({
+/*eslint-disable no-eval*/
+/*global ace, BabelTransform, React*/
+
+const SAMPLE_CODE = `let el = document.getElementById('el');
+
+let View = React.createClass({
+  render: function() {
+    return (
+      <div>
+        You can dump stuff on #el
+      </div>
+    );
+  }
+})
+
+React.render(
+  <View />,
+  el
+);`;
+
+let ReactLive = React.createClass({
   getInitialState: function() {
     return {
       editor: undefined
-    }
+    };
   },
   compile: function() {
-    // The "evil" call :)
-    eval(JSXTransformer.transform(this.state.editor.getSession().getValue()).code)
+    // The 'evil' call :)
+    eval(BabelTransform.transform(this.state.editor.getSession().getValue()).code);
   },
   render: function() {
     return (
@@ -15,34 +35,20 @@ var ReactLive = React.createClass({
         <div id='editor'></div>
         <div id='el'>You can dump stuff on #el</div>
       </div>
-    )
+    );
   },
   componentDidMount: function() {
-    this.state.editor = ace.edit('editor')
-    this.state.editor.setTheme('ace/theme/pastel_on_dark')
+    this.state.editor = ace.edit('editor');
+    this.state.editor.setTheme('ace/theme/pastel_on_dark');
 
-    var session = this.state.editor.getSession()
-    session.setTabSize(2)
-    session.setMode('ace/mode/jsx')
-    session.setValue(
-      "var el   = document.getElementById('el')\n\n" +
-      "var View = React.createClass({\n" +
-      "  render: function() {\n" +
-      "    return (\n" +
-      "      <div>\n" +
-      "      </div>\n" +
-      "    )\n" +
-      "  }\n" +
-      "})\n\n" +
-      "React.render(\n" +
-      "  <View />,\n" +
-      "  el\n" +
-      ")"
-    )
+    let session = this.state.editor.getSession();
+    session.setTabSize(2);
+    session.setMode('ace/mode/jsx');
+    session.setValue(SAMPLE_CODE);
   }
-})
+});
 
 React.render(
   <ReactLive />,
   document.getElementById('react-live-container')
-)
+);
